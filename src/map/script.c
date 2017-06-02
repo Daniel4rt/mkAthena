@@ -4976,8 +4976,8 @@ void script_reload(void) {
 /// Appends a message to the npc dialog.
 /// If a dialog doesn't exist yet, one is created.
 ///
-/// mes "<message>";
-BUILDIN_FUNC(mes)
+/// pr "<message>";
+BUILDIN_FUNC(pr)
 {
 	TBL_PC* sd;
 	if( !script_rid2sd(sd) )
@@ -5005,8 +5005,8 @@ BUILDIN_FUNC(mes)
 /// Displays the button 'next' in the npc dialog.
 /// The dialog text is cleared and the script continues when the button is pressed.
 ///
-/// next;
-BUILDIN_FUNC(next)
+/// nx;
+BUILDIN_FUNC(nx)
 {
 	TBL_PC* sd;
 
@@ -5023,8 +5023,8 @@ BUILDIN_FUNC(next)
 /// Ends the script and displays the button 'close' on the npc dialog.
 /// The dialog is closed when the button is pressed.
 ///
-/// close;
-BUILDIN_FUNC(close)
+/// cl;
+BUILDIN_FUNC(cl)
 {
 	TBL_PC* sd;
 
@@ -5047,8 +5047,8 @@ BUILDIN_FUNC(close)
 /// Displays the button 'close' on the npc dialog.
 /// The dialog is closed and the script continues when the button is pressed.
 ///
-/// close2;
-BUILDIN_FUNC(close2)
+/// cls;
+BUILDIN_FUNC(cls)
 {
 	TBL_PC* sd;
 
@@ -5241,10 +5241,10 @@ BUILDIN_FUNC(menu)
 /// Displays a menu with options and returns the selected option.
 /// Behaves like 'menu' without the target labels.
 ///
-/// select(<option_text>{,<option_text>,...}) -> <selected_option>
+/// sel(<option_text>{,<option_text>,...}) -> <selected_option>
 ///
 /// @see menu
-BUILDIN_FUNC(select)
+BUILDIN_FUNC(sel)
 {
 	int i;
 	const char* text;
@@ -5319,10 +5319,10 @@ BUILDIN_FUNC(select)
 /// pressed.
 /// When cancel is pressed, the script continues and 255 is returned.
 ///
-/// prompt(<option_text>{,<option_text>,...}) -> <selected_option>
+/// sels(<option_text>{,<option_text>,...}) -> <selected_option>
 ///
 /// @see menu
-BUILDIN_FUNC(prompt)
+BUILDIN_FUNC(sels)
 {
 	int i;
 	const char *text;
@@ -5425,7 +5425,7 @@ BUILDIN_FUNC(goto)
 /*==========================================
  * user-defined function call
  *------------------------------------------*/
-BUILDIN_FUNC(callfunc)
+BUILDIN_FUNC(func)
 {
 	int i, j;
 	struct script_retinfo* ri;
@@ -5486,7 +5486,7 @@ BUILDIN_FUNC(callfunc)
 /*==========================================
  * subroutine call
  *------------------------------------------*/
-BUILDIN_FUNC(callsub)
+BUILDIN_FUNC(subf)
 {
 	int i,j;
 	struct script_retinfo* ri;
@@ -5538,8 +5538,8 @@ BUILDIN_FUNC(callsub)
 /// Retrieves an argument provided to callfunc/callsub.
 /// If the argument doesn't exist
 ///
-/// getarg(<index>{,<default_value>}) -> <value>
-BUILDIN_FUNC(getarg)
+/// farg(<index>{,<default_value>}) -> <value>
+BUILDIN_FUNC(farg)
 {
 	struct script_retinfo* ri;
 	int idx;
@@ -5636,9 +5636,9 @@ BUILDIN_FUNC(rand)
 }
 
 /*==========================================
- * Warp sd to str,x,y or Random or SavePoint/Save
+ * teleport sd to str,x,y or Random or SavePoint/Save
  *------------------------------------------*/
-BUILDIN_FUNC(warp)
+BUILDIN_FUNC(teleport)
 {
 	int ret;
 	int x,y;
@@ -5706,7 +5706,7 @@ static int buildin_areawarp_sub(struct block_list *bl,va_list ap)
 	return 0;
 }
 
-BUILDIN_FUNC(areawarp)
+BUILDIN_FUNC(areateleport)
 {
 	int16 m, x0,y0,x1,y1, x2,y2,x3=0,y3=0;
 	unsigned int index;
@@ -5779,11 +5779,11 @@ BUILDIN_FUNC(areapercentheal)
 }
 
 /*==========================================
- * Warpparty - [Fredzilla] [Paradox924X]
- * Syntax: warpparty "to_mapname",x,y,Party_ID,{<"from_mapname">,<range x>,<range y>};
+ * Teleportparty - [Fredzilla] [Paradox924X]
+ * Syntax: teleportparty "to_mapname",x,y,Party_ID,{<"from_mapname">,<range x>,<range y>};
  * If 'from_mapname' is specified, only the party members on that map will be warped
  *------------------------------------------*/
-BUILDIN_FUNC(warpparty)
+BUILDIN_FUNC(teleportparty)
 {
 	TBL_PC *sd = NULL;
 	TBL_PC *pl_sd;
@@ -5888,10 +5888,10 @@ BUILDIN_FUNC(warpparty)
 }
 
 /*==========================================
- * Warpguild - [Fredzilla]
- * Syntax: warpguild "mapname",x,y,Guild_ID;
+ * Teleportguild - [Fredzilla]
+ * Syntax: teleportguild "mapname",x,y,Guild_ID;
  *------------------------------------------*/
-BUILDIN_FUNC(warpguild)
+BUILDIN_FUNC(teleportguild)
 {
 	TBL_PC *sd = NULL;
 	TBL_PC *pl_sd;
@@ -6222,10 +6222,10 @@ BUILDIN_FUNC(setr)
 ///
 
 /// Sets values of an array, from the starting index.
-/// ex: setarray arr[1],1,2,3;
+/// ex: sar arr[1],1,2,3;
 ///
-/// setarray <array variable>,<value1>{,<value2>...};
-BUILDIN_FUNC(setarray)
+/// sar <array variable>,<value1>{,<value2>...};
+BUILDIN_FUNC(sar)
 {
 	struct script_data* data;
 	const char* name;
@@ -6272,10 +6272,10 @@ BUILDIN_FUNC(setarray)
 }
 
 /// Sets count values of an array, from the starting index.
-/// ex: cleararray arr[0],0,1;
+/// ex: clearar arr[0],0,1;
 ///
-/// cleararray <array variable>,<value>,<count>;
-BUILDIN_FUNC(cleararray)
+/// clearar <array variable>,<value>,<count>;
+BUILDIN_FUNC(clearar)
 {
 	struct script_data* data;
 	const char* name;
@@ -6319,10 +6319,10 @@ BUILDIN_FUNC(cleararray)
 }
 
 /// Copies data from one array to another.
-/// ex: copyarray arr[0],arr[2],2;
+/// ex: copyar arr[0],arr[2],2;
 ///
-/// copyarray <destination array variable>,<source array variable>,<count>;
-BUILDIN_FUNC(copyarray)
+/// copyar <destination array variable>,<source array variable>,<count>;
+BUILDIN_FUNC(copyar)
 {
 	struct script_data* data1;
 	struct script_data* data2;
@@ -6404,10 +6404,10 @@ BUILDIN_FUNC(copyarray)
 
 /// Returns the size of the array.
 /// Assumes that everything before the starting index exists.
-/// ex: getarraysize(arr[3])
+/// ex: arsize(arr[3])
 ///
-/// getarraysize(<array variable>) -> <int>
-BUILDIN_FUNC(getarraysize)
+/// arsize(<array variable>) -> <int>
+BUILDIN_FUNC(arsize)
 {
 	struct script_data* data;
 	const char* name;
@@ -6443,7 +6443,7 @@ int script_array_index_cmp(const void *a, const void *b) {
 ///
 /// deletearray <array variable>;
 /// deletearray <array variable>,<count>;
-BUILDIN_FUNC(deletearray)
+BUILDIN_FUNC(delar)
 {
 	struct script_data* data;
 	const char* name;
@@ -6627,7 +6627,7 @@ BUILDIN_FUNC(changelook)
 /*==========================================
  *
  *------------------------------------------*/
-BUILDIN_FUNC(cutin)
+BUILDIN_FUNC(image)
 {
 	TBL_PC* sd;
 
@@ -23142,36 +23142,36 @@ BUILDIN_FUNC(preg_match) {
 /// for an explanation on args, see add_buildin_func
 struct script_function buildin_func[] = {
 	// NPC interaction
-	BUILDIN_DEF(mes,"s*"),
-	BUILDIN_DEF(next,""),
-	BUILDIN_DEF(close,""),
-	BUILDIN_DEF(close2,""),
+	BUILDIN_DEF(pr,"s*"),
+	BUILDIN_DEF(nx,""),
+	BUILDIN_DEF(cl,""),
+	BUILDIN_DEF(cls,""),
 	BUILDIN_DEF(menu,"sl*"),
-	BUILDIN_DEF(select,"s*"), //for future jA script compatibility
-	BUILDIN_DEF(prompt,"s*"),
+	BUILDIN_DEF(sel,"s*"), //for future jA script compatibility
+	BUILDIN_DEF(sels,"s*"),
 	//
 	BUILDIN_DEF(goto,"l"),
-	BUILDIN_DEF(callsub,"l*"),
-	BUILDIN_DEF(callfunc,"s*"),
+	BUILDIN_DEF(subf,"l*"),
+	BUILDIN_DEF(func,"s*"),
 	BUILDIN_DEF(return,"?"),
-	BUILDIN_DEF(getarg,"i?"),
+	BUILDIN_DEF(farg,"i?"),
 	BUILDIN_DEF(jobchange,"i??"),
 	BUILDIN_DEF(jobname,"i"),
 	BUILDIN_DEF(input,"r??"),
-	BUILDIN_DEF(warp,"sii?"),
-	BUILDIN_DEF2(warp, "warpchar", "sii?"),
-	BUILDIN_DEF(areawarp,"siiiisii??"),
-	BUILDIN_DEF(warpparty,"siii???"), // [Fredzilla] [Paradox924X]
-	BUILDIN_DEF(warpguild,"siii"), // [Fredzilla]
+	BUILDIN_DEF(teleport,"sii?"),
+	BUILDIN_DEF2(teleport, "telchar", "sii?"),
+	BUILDIN_DEF(areateleport,"siiiisii??"),
+	BUILDIN_DEF(teleportparty,"siii???"), // [Fredzilla] [Paradox924X]
+	BUILDIN_DEF(teleportguild,"siii"), // [Fredzilla]
 	BUILDIN_DEF(setlook,"ii?"),
 	BUILDIN_DEF(changelook,"ii?"), // Simulates but don't Store it
 	BUILDIN_DEF2(setr,"set","rv?"),
 	BUILDIN_DEF(setr,"rv??"), // Not meant to be used directly, required for var++/var--
-	BUILDIN_DEF(setarray,"rv*"),
-	BUILDIN_DEF(cleararray,"rvi"),
-	BUILDIN_DEF(copyarray,"rri"),
-	BUILDIN_DEF(getarraysize,"r"),
-	BUILDIN_DEF(deletearray,"r?"),
+	BUILDIN_DEF(sar,"rv*"),
+	BUILDIN_DEF(clearar,"rvi"),
+	BUILDIN_DEF(copyar,"rri"),
+	BUILDIN_DEF(arsize,"r"),
+	BUILDIN_DEF(delar,"r?"),
 	BUILDIN_DEF(getelementofarray,"ri"),
 	BUILDIN_DEF(getitem,"vi?"),
 	BUILDIN_DEF(rentitem,"vi?"),
@@ -23191,7 +23191,7 @@ struct script_function buildin_func[] = {
 	BUILDIN_DEF2(delitem2,"cartdelitem2","viiiiiiii?"),
 	BUILDIN_DEF2(enableitemuse,"enable_items",""),
 	BUILDIN_DEF2(disableitemuse,"disable_items",""),
-	BUILDIN_DEF(cutin,"si"),
+	BUILDIN_DEF(image,"si"),
 	BUILDIN_DEF(viewpoint,"iiiii"),
 	BUILDIN_DEF(heal,"ii?"),
 	BUILDIN_DEF(itemheal,"ii?"),
