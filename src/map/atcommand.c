@@ -9101,6 +9101,26 @@ ACMD_FUNC(mount2) {
 	return 0;
 }
 
+/*==========================================
+ * @bgm reproduce un bgm en el mapa [DanielArt]
+ *------------------------------------------*/
+ACMD_FUNC(bgm) {
+	const char* bgm;
+	bgm = message;
+	map_foreachinmap(playBGM_sub,sd->mapindex,BL_PC,bgm);
+	return 0;
+}
+
+/*==========================================
+ * @bgmserver reproduce un bgm para todo el server [DanielArt]
+ *------------------------------------------*/
+ACMD_FUNC(bgmserver) {
+	const char* bgm;
+	bgm = message;
+	map_foreachpc(&playBGM_foreachpc_sub, bgm);
+	return 0;
+}
+
 ACMD_FUNC(accinfo) {
 	char query[NAME_LENGTH];
 	char type = 0; // type = 1, get only account name
@@ -10233,6 +10253,10 @@ void atcommand_basecommands(void) {
 		ACMD_DEF(adopt),
 		ACMD_DEF(agitstart3),
 		ACMD_DEF(agitend3),
+// Midgar Kingdom [DanielArt]
+		ACMD_DEF(bgm),
+		ACMD_DEF(bgm_server),
+
 	};
 	AtCommandInfo* atcommand;
 	int i;
