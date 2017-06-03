@@ -31,6 +31,8 @@ before_script:
   - sudo apt-get install g++-4.8 -y
 
 script:
+  - chmod 777 configure
+  - chmod 777 Makefile.in
   - ./configure $CONFIGURE_FLAGS
   - make clean
   - make server
