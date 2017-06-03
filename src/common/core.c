@@ -289,7 +289,7 @@ static void display_title(void) {
 
 	ShowMessage("\n");
 	ShowMessage("" CL_PASS "     " CL_BOLD "                                                                 " CL_PASS"" CL_CLL "" CL_NORMAL "\n");
-	ShowMessage("" CL_PASS "     " CL_BOLD "                          Midgar Kingdom                         " CL_PASS"" CL_CLL "" CL_NORMAL "\n");
+	ShowMessage("" CL_PASS "     " CL_BT_WHITE "                          Midgar Kingdom                         " CL_PASS"" CL_CLL "" CL_NORMAL "\n");
 	ShowMessage("" CL_PASS "     " CL_BOLD "                    __ _  ___   __  __                           " CL_PASS "" CL_CLL "" CL_NORMAL "\n");
 	ShowMessage("" CL_PASS "     " CL_BOLD "           ________/ / ,/ /   | / /_/ /_  ___  ____  ____ _      " CL_PASS "" CL_CLL "" CL_NORMAL "\n");
 	ShowMessage("" CL_PASS "     " CL_BOLD "          / _ _   /   /  / /| |/ __/ __ \\/ _ \\/ __ \\/ __ `/      " CL_PASS "" CL_CLL "" CL_NORMAL "\n");
