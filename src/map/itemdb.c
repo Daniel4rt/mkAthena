@@ -1574,14 +1574,14 @@ struct s_random_opt_data* itemdb_randomopt_exists(short id) {
 * <ID>,<{Script}>
 */
 static bool itemdb_read_randomopt(const char* basedir, bool silent) {
-	uint32 lines = 0, count = 0;
+/*	uint32 lines = 0, count = 0;
 	char line[1024];
 
 	char path[256];
 	FILE* fp;
 
 	sprintf(path, "%s/%s", basedir, "item_randomopt_db.txt");
-/*
+
 	if ((fp = fopen(path, "r")) == NULL) {
 		if (silent == 0) ShowError("itemdb_read_randomopt: File not found \"%s\".\n", path);
 		return false;
@@ -1661,11 +1661,10 @@ static bool itemdb_read_randomopt(const char* basedir, bool silent) {
 		}
 		count++;
 	}
-*/
 	fclose(fp);
 
 	ShowStatus("Done reading '"CL_WHITE"%lu"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, path);
-
+*/
 	return true;
 }
 
