@@ -3900,9 +3900,9 @@ ACMD_FUNC(reload) {
 	} else if (strstr(command, "script") || strncmp(message, "script", 3) == 0) {
 		struct s_mapiterator* iter;
 		struct map_session_data* pl_sd;
-		atcommand_broadcast( fd, sd, "@broadcast", "El servidor esta recargando scripts..." );
-		atcommand_broadcast( fd, sd, "@broadcast", "Sentiras un poco de lag hasta que el proceso termine." );
-
+		nullpo_retr(-1, sd);
+		sprintf(atcmd_output, "[Midgar Kingdom]: El servidor va a recargar scripts, tendras un poco de lag unos segundos.");
+		intif_broadcast(atcmd_output, strlen(atcmd_output) + 1, BC_DEFAULT);
 		iter = mapit_getallusers();
 		for( pl_sd = (TBL_PC*)mapit_first(iter); mapit_exists(iter); pl_sd = (TBL_PC*)mapit_next(iter) )
 			pc_close_npc(pl_sd,2);
