@@ -3900,8 +3900,8 @@ ACMD_FUNC(reload) {
 	} else if (strstr(command, "script") || strncmp(message, "script", 3) == 0) {
 		struct s_mapiterator* iter;
 		struct map_session_data* pl_sd;
-		//atcommand_broadcast( fd, sd, "@broadcast", "Server is reloading scripts..." );
-		//atcommand_broadcast( fd, sd, "@broadcast", "You will feel a bit of lag at this point !" );
+		atcommand_broadcast( fd, sd, "@broadcast", "El servidor esta recargando scripts..." );
+		atcommand_broadcast( fd, sd, "@broadcast", "Sentiras un poco de lag hasta que el proceso termine." );
 
 		iter = mapit_getallusers();
 		for( pl_sd = (TBL_PC*)mapit_first(iter); mapit_exists(iter); pl_sd = (TBL_PC*)mapit_next(iter) )

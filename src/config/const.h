@@ -29,13 +29,9 @@
 #endif
 
 /**
- * Path within the /db folder to (non-)renewal specific db files
+ * Path within the /db folder
  **/
-#ifdef RENEWAL
-	#define DBPATH "re/"
-#else
-	#define DBPATH "pre-re/"
-#endif
+#define DBPATH "core/"
 
 #define DBIMPORT "import"
 
