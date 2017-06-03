@@ -252,7 +252,7 @@ ACMD_FUNC(send)
 				// parse string
 				++message;
 				CHECK_EOS(message);
-				end=(num<=0? 0: min(off+((int)num),len));
+				end=(num<=0? 0: min_v(off+((int)num),len));
 				for(; *message != '"' && (off < end || end == 0); ++off){
 					if(*message == '\\'){
 						++message;
@@ -396,39 +396,39 @@ static void warp_get_suggestions(struct map_session_data* sd, const char *name) 
 
 	// if no maps found, search by edit distance
 	if (!count) {
-		unsigned int distance[MAX_MAP_PER_SERVER][2];
+		unsigned int distance_map[MAX_MAP_PER_SERVER][2];
 		int j;
 
 		// calculate Levenshtein distance for all maps
 		for (i = 0; i < MAX_MAP_PER_SERVER; i++) {
 			if (strlen(map[i].name) < 4)  // invalid map name?
-				distance[i][0] = INT_MAX;
+				distance_map[i][0] = INT_MAX;
 			else {
-				distance[i][0] = levenshtein(map[i].name, name);
-				distance[i][1] = i;
+				distance_map[i][0] = levenshtein(map[i].name, name);
+				distance_map[i][1] = i;
 			}
 		}
 
 		// selection sort elements as needed
-		count = min(MAX_SUGGESTIONS, 5);  // results past 5 aren't worth showing
+		count = min_v(MAX_SUGGESTIONS, 5);  // results past 5 aren't worth showing
 		for (i = 0; i < count; i++) {
 			int min = i;
 			for (j = i+1; j < MAX_MAP_PER_SERVER; j++) {
-				if (distance[j][0] < distance[min][0])
+				if (distance_map[j][0] < distance_map[min][0])
 					min = j;
 			}
 
 			// print map name
-			if (distance[min][0] > 4) {  // awful results, don't bother
+			if (distance_map[min][0] > 4) {  // awful results, don't bother
 				if (!i) return;
 				break;
 			}
-			strcat(buffer, map[distance[min][1]].name);
+			strcat(buffer, map[distance_map[min][1]].name);
 			strcat(buffer, " ");
 
 			// swap elements
-			swap(distance[i][0], distance[min][0]);
-			swap(distance[i][1], distance[min][1]);
+			swap(distance_map[i][0], distance_map[min][0]);
+			swap(distance_map[i][1], distance_map[min][1]);
 		}
 	}
 
@@ -3944,7 +3944,7 @@ ACMD_FUNC(partysharelvl) {
 		clif_displaymessage(fd, msg_txt(sd,1322)); // Please enter an amount.
 		return -1;
 	} else {
-		share_lvl = min(abs(atoi(message)),MAX_LEVEL);
+		share_lvl = min_v(abs(atoi(message)),MAX_LEVEL);
         }
 
 	if(intif_party_sharelvlupdate(share_lvl)) //Successfully updated
@@ -5958,7 +5958,7 @@ ACMD_FUNC(autotrade) {
 
 	if( battle_config.at_timeout ) {
 		int timeout = atoi(message);
-		status_change_start(NULL,&sd->bl, SC_AUTOTRADE, 10000, 0, 0, 0, 0, ((timeout > 0) ? min(timeout,battle_config.at_timeout) : battle_config.at_timeout) * 60000, SCSTART_NONE);
+		status_change_start(NULL,&sd->bl, SC_AUTOTRADE, 10000, 0, 0, 0, 0, ((timeout > 0) ? min_v(timeout,battle_config.at_timeout) : battle_config.at_timeout) * 60000, SCSTART_NONE);
 	}
 
 	channel_pcquit(sd,0xF); //leave all chan
@@ -9101,13 +9101,27 @@ ACMD_FUNC(mount2) {
 	return 0;
 }
 
+static int do_bgm(struct block_list* bl,va_list ap)
+{
+	const char* name = va_arg(ap,const char*);
+	clif_playBGM(BL_CAST(BL_PC, bl), name);
+	return 0;
+}
+
+static int do_bgm_pc(struct map_session_data* sd, va_list args)
+{
+	const char* name = va_arg(args, const char*);
+	clif_playBGM(sd, name);
+	return 0;
+}
+
 /*==========================================
  * @bgm reproduce un bgm en el mapa [DanielArt]
  *------------------------------------------*/
 ACMD_FUNC(bgm) {
 	const char* bgm;
 	bgm = message;
-	map_foreachinmap(playBGM_sub,sd->mapindex,BL_PC,bgm);
+	map_foreachinmap(do_bgm,sd->mapindex,BL_PC,bgm);
 	return 0;
 }
 
@@ -9117,7 +9131,7 @@ ACMD_FUNC(bgm) {
 ACMD_FUNC(bgmserver) {
 	const char* bgm;
 	bgm = message;
-	map_foreachpc(&playBGM_foreachpc_sub, bgm);
+	map_foreachpc(&do_bgm_pc, bgm);
 	return 0;
 }
 
@@ -10255,7 +10269,7 @@ void atcommand_basecommands(void) {
 		ACMD_DEF(agitend3),
 // Midgar Kingdom [DanielArt]
 		ACMD_DEF(bgm),
-		ACMD_DEF(bgm_server),
+		ACMD_DEF(bgmserver),
 
 	};
 	AtCommandInfo* atcommand;
@@ -10351,7 +10365,7 @@ static void atcommand_get_suggestions(struct map_session_data* sd, const char *n
 		// Merge full match and prefix match results
 		if (prefix_count < MAX_SUGGESTIONS) {
 			memmove(&suggestions[prefix_count], full_match, sizeof(char*) * (MAX_SUGGESTIONS-prefix_count));
-			prefix_count = min(prefix_count+full_count, MAX_SUGGESTIONS);
+			prefix_count = min_v(prefix_count+full_count, MAX_SUGGESTIONS);
 		}
 
 		// Build the suggestion string
@@ -10392,7 +10406,7 @@ bool is_atcommand(const int fd, struct map_session_data* sd, const char* message
 	TBL_PC * ssd = NULL; //sd for target
 	AtCommandInfo * info;
 
-	bool is_atcommand = true; // false if it's a charcommand
+	bool is_atcommand_check = true; // false if it's a charcommand
 
 	nullpo_retr(false, sd);
 
@@ -10426,9 +10440,9 @@ bool is_atcommand(const int fd, struct map_session_data* sd, const char* message
 	}
 
 	if (*message == charcommand_symbol)
-		is_atcommand = false;
+		is_atcommand_check = false;
 
-	if (is_atcommand) { // @command
+	if (is_atcommand_check) { // @command
 		sprintf(atcmd_msg, "%s", message);
 		ssd = sd;
 	} else { // #command
@@ -10483,8 +10497,8 @@ bool is_atcommand(const int fd, struct map_session_data* sd, const char* message
 
 		// Check if the binding isn't NULL and there is a NPC event, level of usage met, et cetera
 		if( binding != NULL && binding->npc_event[0] &&
-			((is_atcommand && pc_get_group_level(sd) >= binding->level) ||
-			 (!is_atcommand && pc_get_group_level(sd) >= binding->level2)))
+			((is_atcommand_check && pc_get_group_level(sd) >= binding->level) ||
+			 (!is_atcommand_check && pc_get_group_level(sd) >= binding->level2)))
 		{
 			// Check if self or character invoking; if self == character invoked, then self invoke.
 			npc_do_atcmd_event(ssd, command, params, binding->npc_event);
@@ -10500,7 +10514,7 @@ bool is_atcommand(const int fd, struct map_session_data* sd, const char* message
 
 		sprintf(output, msg_txt(sd,153), command); // "%s is Unknown Command."
 		clif_displaymessage(fd, output);
-		atcommand_get_suggestions(sd, command + 1, is_atcommand);
+		atcommand_get_suggestions(sd, command + 1, is_atcommand_check);
 		return true;
 	}
 
@@ -10511,14 +10525,14 @@ bool is_atcommand(const int fd, struct map_session_data* sd, const char* message
 		if (info->restriction&ATCMD_NOSCRIPT && (type == 0 || type == 3)) //scripts prevent
 			return true;
 		if (info->restriction&ATCMD_NOAUTOTRADE && (type == 0 || type == 3)
-			&& ((is_atcommand && sd && sd->state.autotrade) || (ssd && ssd->state.autotrade)))
+			&& ((is_atcommand_check && sd && sd->state.autotrade) || (ssd && ssd->state.autotrade)))
 			return true;
 	}
 
 	// type == 1 : player invoked
 	if (type == 1) {
-		if ((is_atcommand && info->at_groups[sd->group_pos] == 0) ||
-			(!is_atcommand && info->char_groups[sd->group_pos] == 0) )
+		if ((is_atcommand_check && info->at_groups[sd->group_pos] == 0) ||
+			(!is_atcommand_check && info->char_groups[sd->group_pos] == 0) )
 			return false;
 
 		if( pc_isdead(sd) && pc_has_permission(sd,PC_PERM_DISABLE_CMD_DEAD) ) {
@@ -10536,7 +10550,7 @@ bool is_atcommand(const int fd, struct map_session_data* sd, const char* message
 	}
 
 	//Log only if successful.
-	log_atcommand(sd, is_atcommand ? atcmd_msg : message);
+	log_atcommand(sd, is_atcommand_check ? atcmd_msg : message);
 
 	return true;
 }

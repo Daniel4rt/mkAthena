@@ -282,7 +282,7 @@ static void mapif_parse_Auction_requestlist(int fd)
 	char searchtext[NAME_LENGTH];
 	uint32 char_id = RFIFOL(fd,4), len = sizeof(struct auction_data);
 	int price = RFIFOL(fd,10);
-	short type = RFIFOW(fd,8), page = max(1,RFIFOW(fd,14));
+	short type = RFIFOW(fd,8), page = max_v(1,RFIFOW(fd,14));
 	unsigned char buf[5 * sizeof(struct auction_data)];
 	DBIterator *iter = db_iterator(auction_db_);
 	struct auction_data *auction;

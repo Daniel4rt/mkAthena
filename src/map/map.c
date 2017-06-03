@@ -1199,10 +1199,10 @@ int map_foreachinpath(int (*func)(struct block_list*,va_list),int16 m,int16 x0,i
 	if ( my0 > my1 )
 		swap(my0, my1);
 
-	mx0 = max(mx0, 0);
-	my0 = max(my0, 0);
-	mx1 = min(mx1, map[ m ].xs - 1);
-	my1 = min(my1, map[ m ].ys - 1);
+	mx0 = max_v(mx0, 0);
+	my0 = max_v(my0, 0);
+	mx1 = min_v(mx1, map[ m ].xs - 1);
+	my1 = min_v(my1, map[ m ].ys - 1);
 
 	range *= range << 8; //Values are shifted later on for higher precision using int math.
 
@@ -1355,10 +1355,10 @@ int map_foreachindir(int(*func)(struct block_list*, va_list), int16 m, int16 x0,
 	mx1 += abs(range*dirx[(dir + 2) % 8]);
 	my1 += abs(range*diry[(dir + 2) % 8]);
 
-	mx0 = max(mx0, 0);
-	my0 = max(my0, 0);
-	mx1 = min(mx1, map[m].xs - 1);
-	my1 = min(my1, map[m].ys - 1);
+	mx0 = max_v(mx0, 0);
+	my0 = max_v(my0, 0);
+	mx1 = min_v(mx1, map[m].xs - 1);
+	my1 = min_v(my1, map[m].ys - 1);
 
 	if (type&~BL_MOB) {
 		for (by = my0 / BLOCK_SIZE; by <= my1 / BLOCK_SIZE; by++) {

@@ -1150,7 +1150,7 @@ int StringBuf_AppendStr(StringBuf* self, const char* str)
 	if( needed >= available )
 	{// not enough space, expand the buffer (minimum expansion = 1024)
 		int off = (int)(self->ptr_ - self->buf_);
-		self->max_ += max(needed, 1024);
+		self->max_ += max_v(needed, 1024);
 		self->buf_ = (char*)aRealloc(self->buf_, self->max_ + 1);
 		self->ptr_ = self->buf_ + off;
 	}

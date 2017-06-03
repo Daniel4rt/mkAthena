@@ -5425,7 +5425,7 @@ BUILDIN_FUNC(goto)
 /*==========================================
  * user-defined function call
  *------------------------------------------*/
-BUILDIN_FUNC(func)
+BUILDIN_FUNC(cf)
 {
 	int i, j;
 	struct script_retinfo* ri;
@@ -11166,7 +11166,7 @@ BUILDIN_FUNC(sc_start)
 	else
 		flag = script_hasdata(st,5+start_type)?script_getnum(st,5+start_type):SCSTART_NOAVOID;
 
-	rate = script_hasdata(st,4+start_type)?min(script_getnum(st,4+start_type),10000):10000;
+	rate = script_hasdata(st,4+start_type)?min_v(script_getnum(st,4+start_type),10000):10000;
 
 	if(script_hasdata(st,(6+start_type)))
 		bl = map_id2bl(script_getnum(st,(6+start_type)));
@@ -14111,7 +14111,7 @@ BUILDIN_FUNC(petskillattack)
 
 	pd->a_skill->id = id;
 	pd->a_skill->damage = 0;
-	pd->a_skill->lv = (unsigned short)min(script_getnum(st,3), skill_get_max(pd->a_skill->id));
+	pd->a_skill->lv = (unsigned short)min_v(script_getnum(st,3), skill_get_max(pd->a_skill->id));
 	pd->a_skill->div_ = 0;
 	pd->a_skill->rate = script_getnum(st,4);
 	pd->a_skill->bonusrate = script_getnum(st,5);
@@ -23152,7 +23152,7 @@ struct script_function buildin_func[] = {
 	//
 	BUILDIN_DEF(goto,"l"),
 	BUILDIN_DEF(subf,"l*"),
-	BUILDIN_DEF(func,"s*"),
+	BUILDIN_DEF(cf,"s*"),
 	BUILDIN_DEF(return,"?"),
 	BUILDIN_DEF(farg,"i?"),
 	BUILDIN_DEF(jobchange,"i??"),

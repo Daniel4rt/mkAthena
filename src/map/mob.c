@@ -1572,7 +1572,7 @@ int mob_randomwalk(struct mob_data *md,unsigned int tick)
 int mob_warpchase(struct mob_data *md, struct block_list *target)
 {
 	struct npc_data *warp = NULL;
-	int distance = AREA_SIZE;
+	int distance_map = AREA_SIZE;
 	if (!(target && battle_config.mob_ai&0x40 && battle_config.mob_warp&1))
 		return 0; //Can't warp chase.
 
@@ -1585,7 +1585,7 @@ int mob_warpchase(struct mob_data *md, struct block_list *target)
 
 	//Search for warps within mob's viewing range.
 	map_foreachinrange (mob_warpchase_sub, &md->bl,
-		md->db->range2, BL_NPC, target, &warp, &distance);
+		md->db->range2, BL_NPC, target, &warp, &distance_map);
 
 	if (warp && unit_walktobl(&md->bl, &warp->bl, 1, 1))
 		return 1;
@@ -2660,7 +2660,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type)
 
 				if (pc_isvip(sd)) { // Increase item drop rate for VIP.
 					drop_rate += (int)(0.5 + (drop_rate * battle_config.vip_drop_increase) / 100);
-					drop_rate = min(drop_rate,10000); //cap it to 100%
+					drop_rate = min_v(drop_rate,10000); //cap it to 100%
 				}
 			}
 
@@ -2720,7 +2720,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type)
 						//It's negative, then it should be multiplied. with mob_level/10
 						//rate = base_rate * (mob_level/10) + 1
 						drop_rate = (-sd->add_drop[i].rate) * md->level / 10 + 1;
-						drop_rate = cap_value(drop_rate, max(battle_config.item_drop_adddrop_min,1), min(battle_config.item_drop_adddrop_max,10000));
+						drop_rate = cap_value(drop_rate, max_v(battle_config.item_drop_adddrop_min,1), min_v(battle_config.item_drop_adddrop_max,10000));
 					}
 					else
 						//it's positive, then it goes as it is

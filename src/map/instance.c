@@ -876,7 +876,7 @@ int instance_delusers(unsigned short instance_id)
 
 	// If no one is in the instance, start the idle timer
 	for(i = 0; i < im->cnt_map && im->map[i]->m; i++)
-		users += max(map[im->map[i]->m].users,0);
+		users += max_v(map[im->map[i]->m].users,0);
 
 	// We check the actual map.users before being updated, hence the 1
 	// The instance should be empty if users are now <= 1

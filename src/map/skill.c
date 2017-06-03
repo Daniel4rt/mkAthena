@@ -227,7 +227,7 @@ static void skill_chk2(int *idx) {
 	skill_chk(&(id));\
 	if (!(id))\
 		return 0;\
-	idx = min((lv), MAX_SKILL_LEVEL) - 1;\
+	idx = min_v((lv), MAX_SKILL_LEVEL) - 1;\
 	if ((lv) > MAX_SKILL_LEVEL && (arrvar)[idx] > 1 && idx > 1) {\
 		int a__ = (arrvar)[idx-2];\
 		int b__ = (arrvar)[idx-1];\
@@ -1212,7 +1212,7 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 		break;
 
 	case MG_FROSTDIVER:
-		if(!sc_start(src,bl,SC_FREEZE,min(skill_lv*3+35,skill_lv+60),skill_lv,skill_get_time2(skill_id,skill_lv)) && sd)
+		if(!sc_start(src,bl,SC_FREEZE,min_v(skill_lv*3+35,skill_lv+60),skill_lv,skill_get_time2(skill_id,skill_lv)) && sd)
 			clif_skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 		break;
 
@@ -1240,7 +1240,7 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 		break;
 
 	case WZ_VERMILION:
-		sc_start(src,bl,SC_BLIND,min(4*skill_lv,40),skill_lv,skill_get_time2(skill_id,skill_lv));
+		sc_start(src,bl,SC_BLIND,min_v(4*skill_lv,40),skill_lv,skill_get_time2(skill_id,skill_lv));
 		break;
 
 	case WZ_HEAVENDRIVE:
@@ -1913,7 +1913,7 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 		{
 			uint16 pos[] = { EQP_HEAD_LOW, EQP_HEAD_MID, EQP_HEAD_TOP, EQP_HAND_R, EQP_HAND_L, EQP_ARMOR, EQP_SHOES, EQP_GARMENT, EQP_ACC_L, EQP_ACC_R };
 			skill_break_equip(src,bl,pos[rnd()%ARRAYLENGTH(pos)],
-				max(skill_lv * 500,(sstatus->dex * skill_lv * 10) - (tstatus->agi * 20)), //(custom)
+				max_v(skill_lv * 500,(sstatus->dex * skill_lv * 10) - (tstatus->agi * 20)), //(custom)
 				BCT_ENEMY);
 		}
 		break;
@@ -2036,7 +2036,7 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 			if (ud) {
 				rate = skill_delayfix(src, skill, skill_lv);
 				if (DIFF_TICK(ud->canact_tick, tick + rate) < 0){
-					ud->canact_tick = max(tick + rate, ud->canact_tick);
+					ud->canact_tick = max_v(tick + rate, ud->canact_tick);
 					if ( battle_config.display_status_timers )
 						clif_status_change(src, SI_ACTIONDELAY, 1, rate, 0, 0, 0);
 				}
@@ -2130,7 +2130,7 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 			if (ud) {
 				rate = skill_delayfix(src, skill, autospl_skill_lv);
 				if (DIFF_TICK(ud->canact_tick, tick + rate) < 0){
-					ud->canact_tick = max(tick + rate, ud->canact_tick);
+					ud->canact_tick = max_v(tick + rate, ud->canact_tick);
 					if ( battle_config.display_status_timers && sd )
 						clif_status_change(src, SI_ACTIONDELAY, 1, rate, 0, 0, 0);
 				}
@@ -2464,7 +2464,7 @@ int skill_counter_additional_effect (struct block_list* src, struct block_list *
 			if (ud) {
 				autospl_rate = skill_delayfix(bl, autospl_skill_id, autospl_skill_lv);
 				if (DIFF_TICK(ud->canact_tick, tick + autospl_rate) < 0){
-					ud->canact_tick = max(tick + autospl_rate, ud->canact_tick);
+					ud->canact_tick = max_v(tick + autospl_rate, ud->canact_tick);
 					if ( battle_config.display_status_timers && dstsd )
 						clif_status_change(bl, SI_ACTIONDELAY, 1, autospl_rate, 0, 0, 0);
 				}
@@ -2936,7 +2936,7 @@ static void skill_do_copy(struct block_list* src,struct block_list *bl, uint16 s
 						tsd->status.skill[tsd->cloneskill_idx].flag = SKILL_FLAG_PERMANENT;
 					}
 
-					lv = min(skill_lv,pc_checkskill(tsd,RG_PLAGIARISM)); //Copied level never be > player's RG_PLAGIARISM level
+					lv = min_v(skill_lv,pc_checkskill(tsd,RG_PLAGIARISM)); //Copied level never be > player's RG_PLAGIARISM level
 
 					tsd->cloneskill_idx = idx;
 					pc_setglobalreg(tsd, add_str(SKILL_VAR_PLAGIARISM), skill_id);
@@ -2958,9 +2958,9 @@ static void skill_do_copy(struct block_list* src,struct block_list *bl, uint16 s
 
 					//Level dependent and limitation.
 					if (src->type == BL_PC) //If player, max skill level is skill_get_max(skill_id)
-						lv = min(lv,skill_get_max(skill_id));
+						lv = min_v(lv,skill_get_max(skill_id));
 					else //Monster might used skill level > allowed player max skill lv. Ex. Drake with Waterball lv. 10
-						lv = min(lv,skill_lv);
+						lv = min_v(lv,skill_lv);
 
 					tsd->reproduceskill_idx = idx;
 					pc_setglobalreg(tsd, add_str(SKILL_VAR_REPRODUCE), skill_id);
@@ -4052,7 +4052,7 @@ static int skill_timerskill(int tid, unsigned int tick, int id, intptr_t data)
 					// Official behaviour is to hit as long as there is a line of sight, regardless of distance
 					if (skl->type > 0 && !status_isdead(target) && path_search_long(NULL,src->m,src->x,src->y,target->x,target->y,CELL_CHKWALL)) {
 						// Apply canact delay here to prevent hacks (unlimited casting)
-						ud->canact_tick = max(tick + status_get_amotion(src), ud->canact_tick);
+						ud->canact_tick = max_v(tick + status_get_amotion(src), ud->canact_tick);
 						skill_attack(BF_MAGIC, src, src, target, skl->skill_id, skl->skill_lv, tick, skl->flag);
 					}
 					if (unit && !status_isdead(target) && !status_isdead(src)) {
@@ -5093,11 +5093,11 @@ int skill_castend_damage_id (struct block_list* src, struct block_list *bl, uint
 					break;
 				skill_blown(src,bl,1,dir,BLOWN_NONE);
 				// Splash around target cell, but only cells inside area; we first have to check the area is not negative
-				if((max(min_x,tx-1) <= min(max_x,tx+1)) &&
-					(max(min_y,ty-1) <= min(max_y,ty+1)) &&
-					(map_foreachinarea(skill_area_sub, bl->m, max(min_x,tx-1), max(min_y,ty-1), min(max_x,tx+1), min(max_y,ty+1), splash_target(src), src, skill_id, skill_lv, tick, flag|BCT_ENEMY, skill_area_sub_count))) {
+				if((max_v(min_x,tx-1) <= min_v(max_x,tx+1)) &&
+					(max_v(min_y,ty-1) <= min_v(max_y,ty+1)) &&
+					(map_foreachinarea(skill_area_sub, bl->m, max_v(min_x,tx-1), max_v(min_y,ty-1), min_v(max_x,tx+1), min_v(max_y,ty+1), splash_target(src), src, skill_id, skill_lv, tick, flag|BCT_ENEMY, skill_area_sub_count))) {
 					// Recursive call
-					map_foreachinarea(skill_area_sub, bl->m, max(min_x,tx-1), max(min_y,ty-1), min(max_x,tx+1), min(max_y,ty+1), splash_target(src), src, skill_id, skill_lv, tick, (flag|BCT_ENEMY)+1, skill_castend_damage_id);
+					map_foreachinarea(skill_area_sub, bl->m, max_v(min_x,tx-1), max_v(min_y,ty-1), min_v(max_x,tx+1), min_v(max_y,ty+1), splash_target(src), src, skill_id, skill_lv, tick, (flag|BCT_ENEMY)+1, skill_castend_damage_id);
 					// Self-collision
 					if(bl->x >= min_x && bl->x <= max_x && bl->y >= min_y && bl->y <= max_y)
 						skill_attack(BF_WEAPON,src,src,bl,skill_id,skill_lv,tick,(flag&0xFFF)>0?SD_ANIMATION:0);
@@ -5533,7 +5533,7 @@ int skill_castend_damage_id (struct block_list* src, struct block_list *bl, uint
 						break;
 				}
 
-				sd->ud.canact_tick = max(tick + skill_delayfix(src, pres_skill_id, pres_skill_lv), sd->ud.canact_tick);
+				sd->ud.canact_tick = max_v(tick + skill_delayfix(src, pres_skill_id, pres_skill_lv), sd->ud.canact_tick);
 				clif_status_change(src, SI_ACTIONDELAY, 1, skill_delayfix(src, pres_skill_id, pres_skill_lv), 0, 0, 0);
 
 				cooldown = pc_get_skillcooldown(sd,pres_skill_id, pres_skill_lv);
@@ -5892,7 +5892,7 @@ int skill_castend_damage_id (struct block_list* src, struct block_list *bl, uint
 		{
 			int duration = 0;
 			TBL_HOM *hd = BL_CAST(BL_HOM,src);
-			duration = max(skill_lv,(status_get_str(src)/7 - status_get_str(bl)/10))*1000; //Yommy formula
+			duration = max_v(skill_lv,(status_get_str(src)/7 - status_get_str(bl)/10))*1000; //Yommy formula
 
 			if (skill_id == MH_TINDER_BREAKER && unit_movepos(src, bl->x, bl->y, 1, 1)) {
 				clif_blown(src);
@@ -6298,10 +6298,10 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 			do {
 				i = rnd() % MAX_SKILL_ABRA_DB;
 				abra_skill_id = skill_abra_db[i].skill_id;
-				abra_skill_lv = min(skill_lv, skill_get_max(abra_skill_id));
+				abra_skill_lv = min_v(skill_lv, skill_get_max(abra_skill_id));
 			} while ( checked++ < checked_max &&
 				(abra_skill_id == 0 ||
-				rnd()%10000 >= skill_abra_db[i].per[max(skill_lv-1,0)]) );
+				rnd()%10000 >= skill_abra_db[i].per[max_v(skill_lv-1,0)]) );
 
 			if (!skill_get_index(abra_skill_id))
 				break;
@@ -6889,7 +6889,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 			}
 
 			i = 0;
-			count = (sd)? min(skill_lv,MAX_DEVOTION) : 1; // Mercenary only can Devote owner
+			count = (sd)? min_v(skill_lv,MAX_DEVOTION) : 1; // Mercenary only can Devote owner
 			if( sd )
 			{ // Player Devoting Player
 				ARR_FIND(0, count, i, sd->devotion[i] == bl->id );
@@ -7002,7 +7002,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 		break;
 
 	case BS_HAMMERFALL:
-		skill_addtimerskill(src, tick+1000, bl->id, 0, 0, skill_id, skill_lv, min(20+10*skill_lv, 50+5*skill_lv), flag);
+		skill_addtimerskill(src, tick+1000, bl->id, 0, 0, skill_id, skill_lv, min_v(20+10*skill_lv, 50+5*skill_lv), flag);
 		break;
 
 	case RG_RAID:
@@ -9461,7 +9461,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 				if( !sctype && !sc->data[i] )
 					sctype = i; // Take the free SC
 				if( sc->data[i] )
-					pos = max(sc->data[i]->val2,pos);
+					pos = max_v(sc->data[i]->val2,pos);
 			}
 
 			if( !sctype ) {
@@ -10247,14 +10247,14 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 	case SO_SUMMON_VENTUS:
 	case SO_SUMMON_TERA:
 		if( sd ) {
-			int elemental_class = skill_get_elemental_type(skill_id,skill_lv);
+			int elemental_id = skill_get_elemental_type(skill_id,skill_lv);
 
 			// Remove previous elemental first.
 			if( sd->ed )
 				elemental_delete(sd->ed);
 
 			// Summoning the new one.
-			if( !elemental_create(sd,elemental_class,skill_get_time(skill_id,skill_lv)) ) {
+			if( !elemental_create(sd,elemental_id,skill_get_time(skill_id,skill_lv)) ) {
 				clif_skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 				break;
 			}
@@ -10618,7 +10618,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 			 if(hd->homunculus.hunger>50) //reduce hunger
 				 hd->homunculus.hunger = hd->homunculus.hunger/2;
 			 else
-				 hd->homunculus.hunger = min(1,hd->homunculus.hunger);
+				 hd->homunculus.hunger = min_v(1,hd->homunculus.hunger);
 			 if(s_bl && s_bl->type==BL_PC) {
 				 status_set_sp(s_bl,status_get_max_sp(s_bl)/2,0); //master drain 50% sp
 				 clif_send_homdata(((TBL_PC *)s_bl), SP_HUNGRY, hd->homunculus.hunger); //refresh hunger info
@@ -11179,7 +11179,7 @@ int skill_castend_id(int tid, unsigned int tick, int id, intptr_t data)
 			unit_stop_walking(src,1);
 
 		if (!sd || sd->skillitem != ud->skill_id || skill_get_delay(ud->skill_id, ud->skill_lv))
-			ud->canact_tick = max(tick + skill_delayfix(src, ud->skill_id, ud->skill_lv), ud->canact_tick - SECURITY_CASTTIME);
+			ud->canact_tick = max_v(tick + skill_delayfix(src, ud->skill_id, ud->skill_lv), ud->canact_tick - SECURITY_CASTTIME);
 		if (sd) { //Cooldown application
 			int cooldown = pc_get_skillcooldown(sd,ud->skill_id, ud->skill_lv); // Increases/Decreases cooldown of a skill by item/card bonuses.
 			if(cooldown) skill_blockpc_start(sd, ud->skill_id, cooldown);
@@ -11406,7 +11406,7 @@ int skill_castend_pos(int tid, unsigned int tick, int id, intptr_t data)
 			unit_stop_walking(src,1);
 
 		if (!sd || sd->skillitem != ud->skill_id || skill_get_delay(ud->skill_id, ud->skill_lv))
-			ud->canact_tick = max(tick + skill_delayfix(src, ud->skill_id, ud->skill_lv), ud->canact_tick - SECURITY_CASTTIME);
+			ud->canact_tick = max_v(tick + skill_delayfix(src, ud->skill_id, ud->skill_lv), ud->canact_tick - SECURITY_CASTTIME);
 		if (sd) { //Cooldown application
 			int cooldown = pc_get_skillcooldown(sd,ud->skill_id, ud->skill_lv);
 			if(cooldown) skill_blockpc_start(sd, ud->skill_id, cooldown);
@@ -13157,7 +13157,7 @@ static int skill_unit_onplace(struct skill_unit *unit, struct block_list *bl, un
 					//Overwrite status change with new duration
 					if ((td = get_timer(sc->data[type]->timer))!=NULL)
 						status_change_start(ss, bl, type, 10000, sc->data[type]->val1 + 1, sc->data[type]->val2, sc->data[type]->val3, sc->data[type]->val4,
-							max(DIFF_TICK(td->tick, tick), sec), SCSTART_NORATEDEF);
+							max_v(DIFF_TICK(td->tick, tick), sec), SCSTART_NORATEDEF);
 				}
 				else {
 					if (status_change_start(ss, bl, type, 10000, 1, sg->group_id, 0, 0, sec, SCSTART_NORATEDEF)) {
@@ -16037,8 +16037,8 @@ struct skill_condition skill_get_requirement(struct map_session_data* sd, uint16
 		case SO_WIND_INSIGNIA:
 		case SO_EARTH_INSIGNIA:
 		case WZ_FIREPILLAR: // no gems required at level 1-5 [celest]
-			req.itemid[0] = skill_db[idx]->require.itemid[min(skill_lv-1,MAX_SKILL_ITEM_REQUIRE-1)];
-			req.amount[0] = skill_db[idx]->require.amount[min(skill_lv-1,MAX_SKILL_ITEM_REQUIRE-1)];
+			req.itemid[0] = skill_db[idx]->require.itemid[min_v(skill_lv-1,MAX_SKILL_ITEM_REQUIRE-1)];
+			req.amount[0] = skill_db[idx]->require.amount[min_v(skill_lv-1,MAX_SKILL_ITEM_REQUIRE-1)];
 			level_dependent = true;
 
 		/* Normal skill requirements and gemstone checks */
@@ -16277,7 +16277,7 @@ int skill_castfix(struct block_list *bl, uint16 skill_id, uint16 skill_lv) {
 	if (battle_config.cast_rate != 100)
 		time = time * battle_config.cast_rate / 100;
 	// return final cast time
-	time = max(time, 0);
+	time = max_v(time, 0);
 	//ShowInfo("Castime castfix = %f\n",time);
 
 	return (int)time;
@@ -16317,7 +16317,7 @@ int skill_castfix_sc(struct block_list *bl, double time, uint8 flag)
 		}
 	}
 
-	time = max(time, 0);
+	time = max_v(time, 0);
 	//ShowInfo("Castime castfix_sc = %f\n",time);
 
 	return (int)time;
@@ -16390,7 +16390,7 @@ int skill_vfcastfix(struct block_list *bl, double time, uint16 skill_id, uint16 
 		}
 		for (i = 0; i < ARRAYLENGTH(sd->skillfixcastrate) && sd->skillfixcastrate[i].id; i++) {
 			if (sd->skillfixcastrate[i].id == skill_id) { // bonus2 bFixedCastrate
-				fixcast_r = max(fixcast_r, sd->skillfixcastrate[i].val);
+				fixcast_r = max_v(fixcast_r, sd->skillfixcastrate[i].val);
 				break;
 			}
 		}
@@ -16422,13 +16422,13 @@ int skill_vfcastfix(struct block_list *bl, double time, uint16 skill_id, uint16 
 			VARCAST_REDUCTION(sc->data[SC_TELEKINESIS_INTENSE]->val2);
 		// Multiplicative Fixed CastTime values
 		if (sc->data[SC_SECRAMENT])
-			fixcast_r = max(fixcast_r, sc->data[SC_SECRAMENT]->val2);
+			fixcast_r = max_v(fixcast_r, sc->data[SC_SECRAMENT]->val2);
 		if (sd && (skill_lv = pc_checkskill(sd, WL_RADIUS) ) && skill_id >= WL_WHITEIMPRISON && skill_id <= WL_FREEZE_SP)
-			fixcast_r = max(fixcast_r, ((status_get_int(bl) + status_get_lv(bl)) / 15 + skill_lv * 5));
+			fixcast_r = max_v(fixcast_r, ((status_get_int(bl) + status_get_lv(bl)) / 15 + skill_lv * 5));
 		if (sc->data[SC_DANCEWITHWUG])
-			fixcast_r = max(fixcast_r, sc->data[SC_DANCEWITHWUG]->val4);
+			fixcast_r = max_v(fixcast_r, sc->data[SC_DANCEWITHWUG]->val4);
 		if (sc->data[SC_HEAT_BARREL])
-			fixcast_r = max(fixcast_r, sc->data[SC_HEAT_BARREL]->val2);
+			fixcast_r = max_v(fixcast_r, sc->data[SC_HEAT_BARREL]->val2);
 		// Additive Fixed CastTime values
 		if (sc->data[SC_MANDRAGORA])
 			fixed += sc->data[SC_MANDRAGORA]->val1 * 500;
@@ -16438,17 +16438,17 @@ int skill_vfcastfix(struct block_list *bl, double time, uint16 skill_id, uint16 
 			fixed = 0;
 	}
 	if (sc && sc->data[SC_SECRAMENT] && skill_id == HW_MAGICPOWER && (flag&2)) // Sacrament lowers Mystical Amplification cast time
-		fixcast_r = max(fixcast_r, sc->data[SC_SECRAMENT]->val2);
+		fixcast_r = max_v(fixcast_r, sc->data[SC_SECRAMENT]->val2);
 
 	if (varcast_r < 0)
-		time = time * (1 - (float)min(varcast_r, 100) / 100);
+		time = time * (1 - (float)min_v(varcast_r, 100) / 100);
 
 	// Apply Variable CastTime calculation by INT & DEX
 	if (!(flag&1))
 		time = time * (1 - sqrt(((float)(status_get_dex(bl) * 2 + status_get_int(bl)) / battle_config.vcast_stat_scale)));
 
-	time = time * (1 - (float)min(reduce_cast_rate, 100) / 100);
-	time = max(time, 0) + (1 - (float)min(fixcast_r, 100) / 100) * max(fixed, 0); //Underflow checking/capping
+	time = time * (1 - (float)min_v(reduce_cast_rate, 100) / 100);
+	time = max_v(time, 0) + (1 - (float)min_v(fixcast_r, 100) / 100) * max_v(fixed, 0); //Underflow checking/capping
 
 	return (int)time;
 }
@@ -16543,7 +16543,7 @@ int skill_delayfix(struct block_list *bl, uint16 skill_id, uint16 skill_lv)
 
 	//ShowInfo("Delay delayfix = %d\n",time);
 
-	return max(time,0);
+	return max_v(time,0);
 }
 
 
@@ -19652,7 +19652,7 @@ int skill_select_menu(struct map_session_data *sd,uint16 skill_id) {
 	}
 
 	lv = (aslvl + 1) / 2; // The level the skill will be autocasted
-	lv = min(lv,sd->status.skill[sk_idx].lv);
+	lv = min_v(lv,sd->status.skill[sk_idx].lv);
 	prob = (aslvl >= 10) ? 15 : (30 - 2 * aslvl); // Probability at level 10 was increased to 15.
 	sc_start4(&sd->bl,&sd->bl,SC__AUTOSHADOWSPELL,100,id,lv,prob,0,skill_get_time(SC_AUTOSHADOWSPELL,aslvl));
 	return 0;
@@ -21195,7 +21195,7 @@ static bool skill_parse_row_nonearnpcrangedb(char* split[], int column, int curr
 
 	id = skill_db_isset(id, __FUNCTION__);
 
-	skill_db[id]->unit_nonearnpc_range = max(atoi(split[1]),0);
+	skill_db[id]->unit_nonearnpc_range = max_v(atoi(split[1]),0);
 	skill_db[id]->unit_nonearnpc_type = (atoi(split[2])) ? cap_value(atoi(split[2]),1,15) : 15;
 	return true;
 }

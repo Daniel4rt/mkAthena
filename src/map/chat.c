@@ -31,7 +31,7 @@ static struct chat_data* chat_createchat(struct block_list* bl, const char* titl
 	safestrncpy(cd->pass, pass, sizeof(cd->pass));
 	cd->pub = pub;
 	cd->users = 0;
-	cd->limit = min(limit, ARRAYLENGTH(cd->usersd));
+	cd->limit = min_v(limit, ARRAYLENGTH(cd->usersd));
 	cd->trigger = trigger;
 	cd->zeny = zeny;
 	cd->minLvl = minLvl;
@@ -313,7 +313,7 @@ int chat_changechatstatus(struct map_session_data* sd, const char* title, const 
 
 	safestrncpy(cd->title, title, CHATROOM_TITLE_SIZE);
 	safestrncpy(cd->pass, pass, CHATROOM_PASS_SIZE);
-	cd->limit = min(limit, ARRAYLENGTH(cd->usersd));
+	cd->limit = min_v(limit, ARRAYLENGTH(cd->usersd));
 	cd->pub = pub;
 
 	clif_changechatstatus(cd);

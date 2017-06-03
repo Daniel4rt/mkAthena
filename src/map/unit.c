@@ -1651,7 +1651,7 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 				break;
 			case CR_DEVOTION:
 				if (target->type == BL_PC) {
-					uint8 i = 0, count = min(skill_lv, MAX_DEVOTION);
+					uint8 i = 0, count = min_v(skill_lv, MAX_DEVOTION);
 
 					ARR_FIND(0, count, i, sd->devotion[i] == target_id);
 					if (i == count) {
@@ -1741,7 +1741,7 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 		break;
 		case MO_FINGEROFFENSIVE:
 			if(sd)
-				casttime += casttime * min(skill_lv, sd->spiritball);
+				casttime += casttime * min_v(skill_lv, sd->spiritball);
 		break;
 		case MO_EXTREMITYFIST:
 			if (sc && sc->data[SC_COMBO] &&
@@ -1864,7 +1864,7 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 		ud->state.skillcastcancel = 0;
 
 	if (!sd || sd->skillitem != skill_id || skill_get_cast(skill_id, skill_lv))
-		ud->canact_tick = tick + max(casttime, max(status_get_amotion(src), battle_config.min_skill_delay_limit)) + SECURITY_CASTTIME;
+		ud->canact_tick = tick + max_v(casttime, max_v(status_get_amotion(src), battle_config.min_skill_delay_limit)) + SECURITY_CASTTIME;
 
 	if( sd ) {
 		switch( skill_id ) {
@@ -2039,7 +2039,7 @@ int unit_skilluse_pos2( struct block_list *src, short skill_x, short skill_y, ui
 
 	ud->state.skillcastcancel = castcancel&&casttime>0?1:0;
 	if (!sd || sd->skillitem != skill_id || skill_get_cast(skill_id, skill_lv))
-		ud->canact_tick = tick + max(casttime, max(status_get_amotion(src), battle_config.min_skill_delay_limit)) + SECURITY_CASTTIME;
+		ud->canact_tick = tick + max_v(casttime, max_v(status_get_amotion(src), battle_config.min_skill_delay_limit)) + SECURITY_CASTTIME;
 
 // 	if( sd )
 // 	{

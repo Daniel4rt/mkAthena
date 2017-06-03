@@ -537,7 +537,7 @@ void pc_inventory_rentals(struct map_session_data *sd)
 		}
 	}
 
-	if( c > 0 ) // min(next_tick,3600000) 1 hour each timer to keep announcing to the owner, and to avoid a but with rental time > 15 days
+	if( c > 0 ) // min_v(next_tick,3600000) 1 hour each timer to keep announcing to the owner, and to avoid a but with rental time > 15 days
 		sd->rental_timer = add_timer(gettick() + umin(next_tick,3600000), pc_inventory_rental_end, sd->bl.id, 0);
 	else
 		sd->rental_timer = INVALID_TIMER;
@@ -2628,7 +2628,7 @@ void pc_bonus(struct map_session_data *sd,int type,int val)
 			break;
 		case SP_SPEED_RATE:	//Non stackable increase
 			if(sd->state.lr_flag != 2)
-				sd->bonus.speed_rate = min(sd->bonus.speed_rate, -val);
+				sd->bonus.speed_rate = min_v(sd->bonus.speed_rate, -val);
 			break;
 		case SP_SPEED_ADDRATE:	//Stackable increase
 			if(sd->state.lr_flag != 2)
@@ -3006,7 +3006,7 @@ void pc_bonus(struct map_session_data *sd,int type,int val)
 #ifdef RENEWAL_CAST
 		case SP_FIXCASTRATE:
 			if(sd->state.lr_flag != 2)
-				sd->bonus.fixcastrate = min(sd->bonus.fixcastrate,val);
+				sd->bonus.fixcastrate = min_v(sd->bonus.fixcastrate,val);
 			break;
 		case SP_ADD_FIXEDCAST:
 			if(sd->state.lr_flag != 2)
@@ -3038,7 +3038,7 @@ void pc_bonus(struct map_session_data *sd,int type,int val)
 				sd->add_max_weight += val;
 			break;
 		case SP_ABSORB_DMG_MAXHP: // bonus bAbsorbDmgMaxHP,n;
-			sd->bonus.absorb_dmg_maxhp = max(sd->bonus.absorb_dmg_maxhp, val);
+			sd->bonus.absorb_dmg_maxhp = max_v(sd->bonus.absorb_dmg_maxhp, val);
 			break;
 		case SP_CRITICAL_RANGEATK: // bonus bCriticalLong,n;
 			if (sd->state.lr_flag != 2)
@@ -5672,7 +5672,7 @@ int pc_get_skillcooldown(struct map_session_data *sd, uint16 skill_id, uint16 sk
 	ARR_FIND(0, cooldownlen, i, sd->skillcooldown[i].id == skill_id);
 	if (i < cooldownlen) {
 		cooldown += sd->skillcooldown[i].val;
-		cooldown = max(0,cooldown);
+		cooldown = max_v(0,cooldown);
 	}
 	return cooldown;
 }
@@ -10461,7 +10461,7 @@ void pc_overheat(struct map_session_data *sd, int val) {
 		status_change_end(&sd->bl,SC_OVERHEAT_LIMITPOINT,INVALID_TIMER);
 	}
 
-	heat = max(0,heat); // Avoid negative HEAT
+	heat = max_v(0,heat); // Avoid negative HEAT
 	if( heat >= limit[skill] )
 		sc_start(&sd->bl,&sd->bl,SC_OVERHEAT,100,0,1000);
 	else
@@ -10837,10 +10837,10 @@ static bool pc_readdb_levelpenalty(char* fields[], int columns, int current)
 		return false;
 	}
 
-	diff = min(diff, MAX_LEVEL);
+	diff = min_v(diff, MAX_LEVEL);
 
 	if( diff < 0 )
-		diff = min(MAX_LEVEL + ( ~(diff) + 1 ), MAX_LEVEL*2);
+		diff = min_v(MAX_LEVEL + ( ~(diff) + 1 ), MAX_LEVEL*2);
 
 	level_penalty[type][class_][diff] = atoi(fields[3]);
 
@@ -11165,7 +11165,7 @@ static int pc_read_statsdb(const char *basedir, int last_s, bool silent){
 	fp=fopen(line,"r");
 	if(fp == NULL){
 		if(silent==0) ShowWarning("Can't read '"CL_WHITE"%s"CL_RESET"'... Generating DB.\n",line);
-		return max(last_s,i);
+		return max_v(last_s,i);
 	} else {
 		int entries=0;
 		while(fgets(line, sizeof(line), fp))
@@ -11185,7 +11185,7 @@ static int pc_read_statsdb(const char *basedir, int last_s, bool silent){
 		fclose(fp);
 		ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s/%s"CL_RESET"'.\n", entries, basedir,"statpoint.txt");
 	}
-	return max(last_s,i);
+	return max_v(last_s,i);
 }
 
 /*==========================================

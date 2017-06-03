@@ -2136,7 +2136,7 @@ void clif_parse_NPCMarketPurchase(int fd, struct map_session_data *sd) {
 	CREATE(item_list, struct s_npc_buy_list, n);
 	for (i = 0; i < n; i++) {
 		item_list[i].nameid = RFIFOW(fd,info->pos[1]+i*6);
-		item_list[i].qty    = (uint16)min(RFIFOL(fd,info->pos[2]+i*6),USHRT_MAX);
+		item_list[i].qty    = (uint16)min_v(RFIFOL(fd,info->pos[2]+i*6),USHRT_MAX);
 	}
 
 	res = npc_buylist(sd, n, item_list);
@@ -3621,18 +3621,18 @@ void clif_initialstatus(struct map_session_data *sd) {
 	buf = WFIFOP(fd,0);
 
 	WBUFW(buf,0) = 0xbd;
-	WBUFW(buf,2) = min(sd->status.status_point, INT16_MAX);
-	WBUFB(buf,4) = min(sd->status.str, UINT8_MAX);
+	WBUFW(buf,2) = min_v(sd->status.status_point, INT16_MAX);
+	WBUFB(buf,4) = min_v(sd->status.str, UINT8_MAX);
 	WBUFB(buf,5) = pc_need_status_point(sd,SP_STR,1);
-	WBUFB(buf,6) = min(sd->status.agi, UINT8_MAX);
+	WBUFB(buf,6) = min_v(sd->status.agi, UINT8_MAX);
 	WBUFB(buf,7) = pc_need_status_point(sd,SP_AGI,1);
-	WBUFB(buf,8) = min(sd->status.vit, UINT8_MAX);
+	WBUFB(buf,8) = min_v(sd->status.vit, UINT8_MAX);
 	WBUFB(buf,9) = pc_need_status_point(sd,SP_VIT,1);
-	WBUFB(buf,10) = min(sd->status.int_, UINT8_MAX);
+	WBUFB(buf,10) = min_v(sd->status.int_, UINT8_MAX);
 	WBUFB(buf,11) = pc_need_status_point(sd,SP_INT,1);
-	WBUFB(buf,12) = min(sd->status.dex, UINT8_MAX);
+	WBUFB(buf,12) = min_v(sd->status.dex, UINT8_MAX);
 	WBUFB(buf,13) = pc_need_status_point(sd,SP_DEX,1);
-	WBUFB(buf,14) = min(sd->status.luk, UINT8_MAX);
+	WBUFB(buf,14) = min_v(sd->status.luk, UINT8_MAX);
 	WBUFB(buf,15) = pc_need_status_point(sd,SP_LUK,1);
 
 	WBUFW(buf,16) = pc_leftside_atk(sd);
@@ -4783,7 +4783,7 @@ int clif_damage(struct block_list* src, struct block_list* dst, unsigned int tic
 #endif
 	} else {
 #if PACKETVER < 20071113
-		WBUFW(buf,22) = min(damage, INT16_MAX);
+		WBUFW(buf,22) = min_v(damage, INT16_MAX);
 		WBUFW(buf,27+offset) = damage2;
 #else
 		WBUFL(buf,22) = damage;
@@ -5665,9 +5665,9 @@ int clif_skill_nodamage(struct block_list *src,struct block_list *dst, uint16 sk
 	WBUFW(buf,0) = cmd;
 	WBUFW(buf,2) = skill_id;
 #if PACKETVER < 20130731
-	WBUFW(buf,4) = min(heal, INT16_MAX);
+	WBUFW(buf,4) = min_v(heal, INT16_MAX);
 #else
-	WBUFL(buf,4) = min(heal, INT32_MAX);
+	WBUFL(buf,4) = min_v(heal, INT32_MAX);
 	offset += 2;
 #endif
 	WBUFL(buf,6+offset) = dst->id;
@@ -6257,9 +6257,9 @@ void clif_heal(int fd,int type,int val) {
 	WFIFOW(fd,0) = cmd;
 	WFIFOW(fd,2) = type;
 #if PACKETVER < 20141022
-	WFIFOW(fd,4) = min(val, INT16_MAX);
+	WFIFOW(fd,4) = min_v(val, INT16_MAX);
 #else
-	WFIFOL(fd,4) = min(val, INT32_MAX);
+	WFIFOL(fd,4) = min_v(val, INT32_MAX);
 #endif
 	WFIFOSET(fd, packet_len(cmd));
 }
@@ -6966,7 +6966,7 @@ void clif_parse_BankDeposit(int fd, struct map_session_data* sd) {
 		int money = RFIFOL(fd,info->pos[1]);
 
 		if(sd->status.account_id == aid){
-			enum e_BANKING_DEPOSIT_ACK reason = pc_bank_deposit(sd,max(0,money));
+			enum e_BANKING_DEPOSIT_ACK reason = pc_bank_deposit(sd,max_v(0,money));
 			clif_bank_deposit(sd,reason);
 		}
 	}
@@ -7013,7 +7013,7 @@ void clif_parse_BankWithdraw(int fd, struct map_session_data* sd) {
 		int aid = RFIFOL(fd,info->pos[0]); //unused should we check vs fd ?
 		int money = RFIFOL(fd,info->pos[1]);
 		if(sd->status.account_id == aid){
-			enum e_BANKING_WITHDRAW_ACK reason = pc_bank_withdraw(sd,max(0,money));
+			enum e_BANKING_WITHDRAW_ACK reason = pc_bank_withdraw(sd,max_v(0,money));
 			clif_bank_withdraw(sd,reason);
 		}
 	}
@@ -8050,7 +8050,7 @@ void clif_mvp_exp(struct map_session_data *sd, unsigned int exp) {
 	fd = sd->fd;
 	WFIFOHEAD(fd, packet_len(0x10b));
 	WFIFOW(fd,0) = 0x10b;
-	WFIFOL(fd,2) = min(exp, (unsigned int)INT32_MAX);
+	WFIFOL(fd,2) = min_v(exp, (unsigned int)INT32_MAX);
 	WFIFOSET(fd, packet_len(0x10b));
 #endif
 }
@@ -11483,7 +11483,7 @@ void clif_parse_CreateChatRoom(int fd, struct map_session_data* sd)
 		return; // invalid input
 
 	safestrncpy(s_password, password, CHATROOM_PASS_SIZE);
-	safestrncpy(s_title, title, min(len+1,CHATROOM_TITLE_SIZE)); //NOTE: assumes that safestrncpy will not access the len+1'th byte
+	safestrncpy(s_title, title, min_v(len+1,CHATROOM_TITLE_SIZE)); //NOTE: assumes that safestrncpy will not access the len+1'th byte
 
 	chat_createpcchat(sd, s_title, s_password, limit, pub);
 }
@@ -11519,7 +11519,7 @@ void clif_parse_ChatRoomStatusChange(int fd, struct map_session_data* sd){
 		return; // invalid input
 
 	safestrncpy(s_password, password, CHATROOM_PASS_SIZE);
-	safestrncpy(s_title, title, min(len+1,CHATROOM_TITLE_SIZE)); //NOTE: assumes that safestrncpy will not access the len+1'th byte
+	safestrncpy(s_title, title, min_v(len+1,CHATROOM_TITLE_SIZE)); //NOTE: assumes that safestrncpy will not access the len+1'th byte
 
 	chat_changechatstatus(sd, s_title, s_password, limit, pub);
 }
@@ -12004,7 +12004,7 @@ void clif_parse_UseSkillToId(int fd, struct map_session_data *sd)
 		else
 			skill_lv = 0;
 	} else {
-		skill_lv = min(pc_checkskill(sd, skill_id),skill_lv); //never trust client
+		skill_lv = min_v(pc_checkskill(sd, skill_id),skill_lv); //never trust client
 	}
 
 	pc_delinvincibletimer(sd);
@@ -12343,7 +12343,7 @@ void clif_parse_NpcStringInput(int fd, struct map_session_data* sd){
 	message_len++;
 #endif
 
-	safestrncpy(sd->npc_str, message, min(message_len,CHATBOX_SIZE));
+	safestrncpy(sd->npc_str, message, min_v(message_len,CHATBOX_SIZE));
 	npc_scriptcont(sd, npcid, false);
 }
 
@@ -14591,17 +14591,17 @@ void clif_check(int fd, struct map_session_data* pl_sd)
 {
 	WFIFOHEAD(fd,packet_len(0x214));
 	WFIFOW(fd, 0) = 0x214;
-	WFIFOB(fd, 2) = min(pl_sd->status.str, UINT8_MAX);
+	WFIFOB(fd, 2) = min_v(pl_sd->status.str, UINT8_MAX);
 	WFIFOB(fd, 3) = pc_need_status_point(pl_sd, SP_STR, 1);
-	WFIFOB(fd, 4) = min(pl_sd->status.agi, UINT8_MAX);
+	WFIFOB(fd, 4) = min_v(pl_sd->status.agi, UINT8_MAX);
 	WFIFOB(fd, 5) = pc_need_status_point(pl_sd, SP_AGI, 1);
-	WFIFOB(fd, 6) = min(pl_sd->status.vit, UINT8_MAX);
+	WFIFOB(fd, 6) = min_v(pl_sd->status.vit, UINT8_MAX);
 	WFIFOB(fd, 7) = pc_need_status_point(pl_sd, SP_VIT, 1);
-	WFIFOB(fd, 8) = min(pl_sd->status.int_, UINT8_MAX);
+	WFIFOB(fd, 8) = min_v(pl_sd->status.int_, UINT8_MAX);
 	WFIFOB(fd, 9) = pc_need_status_point(pl_sd, SP_INT, 1);
-	WFIFOB(fd,10) = min(pl_sd->status.dex, UINT8_MAX);
+	WFIFOB(fd,10) = min_v(pl_sd->status.dex, UINT8_MAX);
 	WFIFOB(fd,11) = pc_need_status_point(pl_sd, SP_DEX, 1);
-	WFIFOB(fd,12) = min(pl_sd->status.luk, UINT8_MAX);
+	WFIFOB(fd,12) = min_v(pl_sd->status.luk, UINT8_MAX);
 	WFIFOB(fd,13) = pc_need_status_point(pl_sd, SP_LUK, 1);
 	WFIFOW(fd,14) = pl_sd->battle_status.batk+pl_sd->battle_status.rhw.atk+pl_sd->battle_status.lhw.atk;
 	WFIFOW(fd,16) = pl_sd->battle_status.rhw.atk2+pl_sd->battle_status.lhw.atk2;
@@ -16039,7 +16039,7 @@ void clif_mercenary_updatestatus(struct map_session_data *sd, int type)
 			}
 			break;
 		case SP_MATK1:
-			WFIFOL(fd,4) = min(status->matk_max, UINT16_MAX);
+			WFIFOL(fd,4) = min_v(status->matk_max, UINT16_MAX);
 			break;
 		case SP_HIT:
 			WFIFOL(fd,4) = status->hit;
@@ -16106,7 +16106,7 @@ void clif_mercenary_info(struct map_session_data *sd)
 	// Mercenary shows ATK as a random value between ATK ~ ATK2
 	atk = rnd()%(status->rhw.atk2 - status->rhw.atk + 1) + status->rhw.atk;
 	WFIFOW(fd,6) = cap_value(atk, 0, INT16_MAX);
-	WFIFOW(fd,8) = min(status->matk_max, UINT16_MAX);
+	WFIFOW(fd,8) = min_v(status->matk_max, UINT16_MAX);
 	WFIFOW(fd,10) = status->hit;
 	WFIFOW(fd,12) = status->cri/10;
 	WFIFOW(fd,14) = status->def;
@@ -17643,7 +17643,7 @@ void clif_sub_ranklist(unsigned char *buf,int idx,struct map_session_data* sd, e
 	}
 
 	//Packet size limits this list to 10 elements. [Skotlex]
-	for (i = 0; i < min(10,size); i++) {
+	for (i = 0; i < min_v(10,size); i++) {
 		if (list[i].id > 0) {
 			const char* name;
 			if (strcmp(list[i].name, "-") == 0 &&
@@ -19057,7 +19057,7 @@ void clif_parse_sale_search( int fd, struct map_session_data* sd ){
 		return;
 	}
 
-	safestrncpy( item_name, RFIFOCP(fd, 8), min(RFIFOW(fd, 2) - 7, ITEM_NAME_LENGTH) );
+	safestrncpy( item_name, RFIFOCP(fd, 8), min_v(RFIFOW(fd, 2) - 7, ITEM_NAME_LENGTH) );
 
 	id = itemdb_searchname(item_name);
 

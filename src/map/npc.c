@@ -4305,19 +4305,19 @@ int npc_parsesrcfile(const char* filepath, bool runOnInit)
 		// fill w1
 		if( pos[3]-pos[2] > ARRAYLENGTH(w1)-1 )
 			ShowWarning("npc_parsesrcfile: w1 truncated, too much data (%d) in file '%s', line '%d'.\n", pos[3]-pos[2], filepath, strline(buffer,p-buffer));
-		i = min(pos[3]-pos[2], ARRAYLENGTH(w1)-1);
+		i = min_v(pos[3]-pos[2], ARRAYLENGTH(w1)-1);
 		memcpy(w1, p+pos[2], i*sizeof(char));
 		w1[i] = '\0';
 		// fill w2
 		if( pos[5]-pos[4] > ARRAYLENGTH(w2)-1 )
 			ShowWarning("npc_parsesrcfile: w2 truncated, too much data (%d) in file '%s', line '%d'.\n", pos[5]-pos[4], filepath, strline(buffer,p-buffer));
-		i = min(pos[5]-pos[4], ARRAYLENGTH(w2)-1);
+		i = min_v(pos[5]-pos[4], ARRAYLENGTH(w2)-1);
 		memcpy(w2, p+pos[4], i*sizeof(char));
 		w2[i] = '\0';
 		// fill w3
 		if( pos[7]-pos[6] > ARRAYLENGTH(w3)-1 )
 			ShowWarning("npc_parsesrcfile: w3 truncated, too much data (%d) in file '%s', line '%d'.\n", pos[7]-pos[6], filepath, strline(buffer,p-buffer));
-		i = min(pos[7]-pos[6], ARRAYLENGTH(w3)-1);
+		i = min_v(pos[7]-pos[6], ARRAYLENGTH(w3)-1);
 		memcpy(w3, p+pos[6], i*sizeof(char));
 		w3[i] = '\0';
 		// fill w4 (to end of line)
@@ -4325,7 +4325,7 @@ int npc_parsesrcfile(const char* filepath, bool runOnInit)
 			ShowWarning("npc_parsesrcfile: w4 truncated, too much data (%d) in file '%s', line '%d'.\n", pos[1]-pos[8], filepath, strline(buffer,p-buffer));
 		if( pos[8] != -1 )
 		{
-			i = min(pos[1]-pos[8], ARRAYLENGTH(w4)-1);
+			i = min_v(pos[1]-pos[8], ARRAYLENGTH(w4)-1);
 			memcpy(w4, p+pos[8], i*sizeof(char));
 			w4[i] = '\0';
 		}

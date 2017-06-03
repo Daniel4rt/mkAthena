@@ -1418,7 +1418,7 @@ void channel_read_config(void) {
 			channel_config.private_channel.allow = allow;
 			channel_config.private_channel.color = channel_getColor(color_str);
 			channel_config.private_channel.delay = delay;
-			channel_config.private_channel.max_member = min(max_member, UINT16_MAX);
+			channel_config.private_channel.max_member = min_v(max_member, UINT16_MAX);
 			channel_config.private_channel.ban = ban;
 			channel_config.private_channel.kick = kick;
 			channel_config.private_channel.color_override = color_override;

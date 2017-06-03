@@ -1732,8 +1732,8 @@ int char_mmo_char_tobuf(uint8* buffer, struct mmo_charstatus* p)
 	WBUFL(buf,46) = p->max_hp;
 	offset+=4;
 	buf = WBUFP(buffer,offset);
-	WBUFW(buf,46) = min(p->sp, INT16_MAX);
-	WBUFW(buf,48) = min(p->max_sp, INT16_MAX);
+	WBUFW(buf,46) = min_v(p->sp, INT16_MAX);
+	WBUFW(buf,48) = min_v(p->max_sp, INT16_MAX);
 	WBUFW(buf,50) = DEFAULT_WALK_SPEED; // p->speed;
 	WBUFW(buf,52) = p->class_;
 	WBUFW(buf,54) = p->hair;
@@ -1789,7 +1789,7 @@ int char_mmo_char_tobuf(uint8* buffer, struct mmo_charstatus* p)
 		else if( charserv_config.charmove_config.char_moves_unlimited )
 			WBUFL(buf,132) = 1;
 		else
-			WBUFL(buf,132) = max( 0, (int)p->character_moves );
+			WBUFL(buf,132) = max_v( 0, (int)p->character_moves );
 		offset += 4;
 	#endif
 	#if PACKETVER >= 20111025
@@ -2736,8 +2736,8 @@ static void char_config_split_startpoint(char *w1_value, char *w2_value, struct 
 			start_point[i].x = MAP_DEFAULT_X;
 			start_point[i].y = MAP_DEFAULT_Y;
 		} else {
-			start_point[i].x = max(0, atoi(fields[2]));
-			start_point[i].y = max(0, atoi(fields[3]));
+			start_point[i].x = max_v(0, atoi(fields[2]));
+			start_point[i].y = max_v(0, atoi(fields[3]));
 		}
 		(*count)++;
 
@@ -2773,9 +2773,9 @@ static void char_config_split_startitem(char *w1_value, char *w2_value, struct s
 		}
 
 		// TODO: Item ID verification
-		start_items[i].nameid = max(0, atoi(fields[1]));
-		start_items[i].amount = max(0, atoi(fields[2]));
-		start_items[i].pos = max(0, atoi(fields[3]));
+		start_items[i].nameid = max_v(0, atoi(fields[1]));
+		start_items[i].amount = max_v(0, atoi(fields[2]));
+		start_items[i].pos = max_v(0, atoi(fields[3]));
 
 		lineitem = strtok(NULL, ":"); //next lineitem
 		i++;
