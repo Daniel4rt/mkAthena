@@ -594,7 +594,7 @@ static bool mmo_auth_tosql(AccountDB_SQL* db, const struct mmo_account* acc, boo
 		||  SQL_SUCCESS != SqlStmt_BindParam(stmt, 16, SQLDT_LONG,       (void*)&acc->vip_time,         sizeof(acc->vip_time))
 		||  SQL_SUCCESS != SqlStmt_BindParam(stmt, 17, SQLDT_INT,        (void*)&acc->old_group,        sizeof(acc->old_group))
 #endif
-		||  SQL_SUCCESS != SqlStmt_BindParam(stmt, 18, SQLDT_STRING,     (void*)&acc->mac,            strlen(acc->mac));
+		||  SQL_SUCCESS != SqlStmt_BindParam(stmt, 18, SQLDT_STRING,     (void*)&acc->mac,            strlen(acc->mac))
 		||  SQL_SUCCESS != SqlStmt_Execute(stmt)
 		) {
 			SqlStmt_ShowDebug(stmt);
