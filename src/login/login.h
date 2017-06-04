@@ -33,6 +33,7 @@ struct login_session_data {
 	long login_id2;
 	char sex;			/// 'F','M','S'
 
+	char mac[MAC_LENGTH];
 	char userid[NAME_LENGTH];	/// account name
 	char passwd[PASSWD_LENGTH]; // 23+1 for plaintext, 32+1 for md5-ed passwords
 	int passwdenc;			/// was the passwd transmited encrypted or clear ?

@@ -113,6 +113,8 @@
 #define MAP_NAME_LENGTH_EXT (MAP_NAME_LENGTH + 4)
 //Pincode Length
 #define PINCODE_LENGTH 4
+//Mac Lenght
+#define MAC_LENGTH 20
 
 #define MAX_FRIENDS 40
 #define MAX_MEMOPOINTS 3
