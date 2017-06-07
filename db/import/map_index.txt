@@ -17,3 +17,26 @@
 //mymap	1250
 //mymap-2
 chry_fld
+Hallow01
+atlantis
+casp_auct01
+casp_auct02
+casp_cave
+casp_chc
+casp_dun01
+casp_dun02
+casp_fild01
+casp_in01
+casp_in02
+casp_step
+casp_wmill
+caspen
+celestiaj
+haunt_e
+haunt_h
+market
+para_benzene
+royal_room3
+vip
+mid_fild01
+scenario

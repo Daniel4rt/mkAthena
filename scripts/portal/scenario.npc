@@ -1,0 +1,6 @@
+// Spawn Zone > Training Zone
+scenario,50,143,0	warp	scenario001	2,2,scenario,154,148
+scenario,154,158,0	warp	scenario001-1	2,2,scenario,50,135
+// Training Zone > Treasure Zone
+scenario,132,125,0	warp	scenario002	2,2,scenario,42,15
+scenario,42,7,0	warp	scenario002-1	2,2,scenario,141,125

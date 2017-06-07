@@ -77,3 +77,13 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+*.pid
+*.log
+*.status
+*.dat
+map-server
+login-server
+login-server_fifo
+map-server_fifo
+char-server_fifo
+char-server
