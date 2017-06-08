@@ -1,0 +1,179 @@
+scenario,42,123,5	script	Orlen#sceQ	637,10,10,{
+	image "aca_ninja_k",2;
+	if( cf("F_CQ2",1000,1004) ) {
+		pr "[ ^000088Orlen^000000 ]";
+		pr "Por ahora sal por esa puerta y acostumbra tu cuerpo al mundo.";
+		cls;
+		image "",255;
+		showevent QTYPE_NONE,0;
+		end;
+	}
+	if(@a < 1) {
+		pr "[ ^000088Orlen^000000 ]";
+		pr "Así que haz despertado, permíteme darte la bienvenida.";
+		nx;
+		pr "[ ^000088Orlen^000000 ]";
+		pr "Te encuentras en un sitio desconocido por la humanidad, un lugar donde traemos al mundo seres extraordinarios.";
+		nx;
+		pr "[ ^000088Orlen^000000 ]";
+		pr "Pero aún cuando seas proveniente de este lugar, no puedo decirte dónde te encuentras.";
+		nx;
+		pr "[ ^000088Orlen^000000 ]";
+		pr "¿Deseas que te siga explicando?";
+		nx;
+		if(sel("No me interesa","Sígueme explicando") == 1) {
+			pr "[ ^000088Orlen^000000 ]";
+			pr "De acuerdo, sigue descanzando, vuelve conmigo si deseas continuar.";
+			cls;
+			@a = 1;
+			image "",255;
+			end;
+		}
+	}
+	pr "[ ^000088Orlen^000000 ]";
+	pr "En estos momentos no te puedes enterar ni quién eres ni dónde estás, pero creéme, lo recordarás con el tiempo.";
+	nx;
+	pr "[ ^000088Orlen^000000 ]";
+	pr "Por ahora, deberás acostumbrar tu cuerpo a este mundo, así que sal por ese tunel y habla con nuestros aliados para que te orienten.";
+	cls;
+	showevent QTYPE_NONE,0;
+	image "",255;
+	setquest 1000;
+	end;
+OnTouch:
+	if( cf("F_CQ2",1001,1004) )
+		end;
+	cf("F_Icon",1000,"!",0);
+	end;
+}
+
+scenario,149,143,6	script	Breid#sceQ	733,10,10,{
+	image "v_breid01",2;
+	if( cf("F_CQ2",1002,1003) ) {
+		pr "[ ^ff7700Breid^000000 ]";
+		pr "Ve a hablar con el hombre en la sala de la izquierda, él te ayudará a ir al verdadero mundo.";
+		cls;
+		image "",255;
+		end;
+	}
+	if( sce_q == 3 ) {
+		pr "[ ^ff7700Breid^000000 ]";
+		pr "Te vi moverte, yo diría que estás listo, bueno, al menos no morirás sin dar pelea.";
+		nx;
+		pr "[ ^ff7700Breid^000000 ]";
+		pr "Verás, estás en unas Ruinas muy escondidas en el mundo, no hay otra forma de salir de aquí sin una magia en particular.";
+		nx;
+		pr "[ ^ff7700Breid^000000 ]";
+		pr "Ve a hablar con el hombre en la sala de la izquierda, él te ayudará a ir al verdadero mundo.";
+		cls;
+		changequest 1001,1002;
+		sce_q = 0;
+		image "",255;
+		end;
+	}
+	if( sce_q == 1 ) {
+		pr "[ ^ff7700Breid^000000 ]";
+		pr "Ve a hablar con el fortachón a mi izquierda para continuar.";
+		cls;
+		image "",255;
+		end;
+	}
+	if( cf("F_CQ",1000) ) {
+		pr "[ ^ff7700Breid^000000 ]";
+		pr "Oh, un nuevo integrante, ya veo.";
+		nx;
+		pr "[ ^ff7700Breid^000000 ]";
+		pr "Seguro que estás ansioso por saber qué demonios haces aquí o quién eres, pero no te la dejaré tan fácil.";
+		nx;
+		pr "[ ^ff7700Breid^000000 ]";
+		pr "Estás como un ciervo que acaba de nacer y debes acostumbrar tu cuerpo a moverte otra vez.";
+		nx;
+		pr "[ ^ff7700Breid^000000 ]";
+		pr "Si quieres que se te permita salir de aquí deberás asegurarte de aprender lo básico al menos.";
+		nx;
+		pr "[ ^ff7700Breid^000000 ]";
+		pr "Por el contrario serás carne para los cuervos allá fuera.";
+		nx;
+		pr "[ ^ff7700Breid^000000 ]";
+		pr "¿Deseas continuar?";
+		nx;
+		if(sel("No.","Continuemos.") == 1) {
+			pr "[ ^ff7700Breid^000000 ]";
+			pr "Si quieres explorar un poco la zona no me importa, pero deberás de prepararte antes si quieres salir.";
+			cls;
+			image "",255;
+			end;
+		}
+		pr "[ ^ff7700Breid^000000 ]";
+		pr "Algo que te debe de quedar muy claro, es que una de las razones por las que haz sido traído aquí es para investigar.";
+		nx;
+		pr "[ ^ff7700Breid^000000 ]";
+		pr "Pero esta investigación no trata de papeles y documentación, deberás investigar las catastrofes del mundo.";
+		nx;
+		pr "[ ^ff7700Breid^000000 ]";
+		pr "¿Qué?, ¿No suena sencillo?","Qué lástima";
+		nx;
+		pr "[ ^ff7700Breid^000000 ]";
+		pr "Como deberás enfrentarte con temibles monstruos a lo largo de tu aventura, necesito que practiques tus técnicas de combate.";
+		nx;
+		pr "[ ^ff7700Breid^000000 ]";
+		pr "Para ello necesito que vayas con el fortachón a mi izquierda, él te instruirá en eso.";
+		cls;
+		sce_q = 1;
+		image "",255;
+		end;
+	}
+	pr "[ ^ff7700Breid^000000 ]";
+	pr "Te ves algo cansado, ¿por qué no descansas un poco más?";
+	cls;
+	image "",255;
+	end;
+OnTouch:
+	if( cf("F_CQ",1000) || cf("F_CQ2",1002,1004) )
+		end;
+	cf("F_Icon",1001,"!",0);
+	end;
+}
+
+scenario,146,130,4	script	Caballero Real#sceQ	734,10,10,{
+	if( sce_q == 3 ) {
+		pr "[ ^777777Caballero Real^000000 ]";
+		pr "Vuelve con ^5533ffBreid^000000.";
+		cl;
+	}
+	if( sce_q < 3 && checkquest(1001,HUNTING) == 2 ) {
+		pr "[ ^777777Caballero Real^000000 ]";
+		pr "Excelente trabajo, vuelve con ^5533ffBreid^000000.";
+		cls;
+		sce_q++;
+		showevent QTYPE_NONE,0;
+		end;
+	}
+	if( sce_q == 1 ) {
+		pr "[ ^777777Caballero Real^000000 ]";
+		pr "De acuerdo, movamos esos músculos.";
+		nx;
+		pr "[ ^777777Caballero Real^000000 ]";
+		pr "Para que recuerdes como combatir, la forma más sencilla es haciéndolo.";
+		nx;
+		pr "[ ^777777Caballero Real^000000 ]";
+		pr "En el área hay distintos enemigos, quiero que elimines a ^5533ff10 de ellos^000000, entonces sabré que estás listo.";
+		nx;
+		pr "[ ^777777Caballero Real^000000 ]";
+		pr "¡Ve allá!";
+		cls;
+		sce_q++;
+		changequest 1000,1001;
+		end;
+	}
+	pr "[ ^777777Caballero Real^000000 ]";
+	pr "Ve a descansar.";
+	cl;
+end;
+OnTouch:
+	cf("F_CQ",1000) || cf("F_CQ2",1002,1004)
+		end;
+	if(sce_q == 2 || sce_q == 1)
+		cf("F_Icon",1001,"!",0);
+	end;
+}

@@ -1,0 +1,28 @@
+// Revisión de quest
+function	script	F_CQ	{
+	if(checkquest(farg(0)) == 1 || checkquest(farg(0)) == 2)
+		return 1;
+	return 0;
+}
+function	script	F_CQ2	{
+	for(.@i = farg(0); .@i < farg(1); .@i++) {
+		if(checkquest(.@i) == 1 || checkquest(.@i) == 2)
+			return 1;
+	}
+	return 0;
+}
+
+// Casteo del ícono sobre el NPC
+function	script	F_Icon	{
+	if(checkquest(farg(0)) == -1) {
+		if(farg(1) == "!")
+			showevent QTYPE_QUEST,farg(2);
+		if(farg(1) == "?")
+			showevent QTYPE_QUEST2,farg(2);
+		if(farg(1) == "W")
+			showevent QTYPE_WARG,farg(2);
+		if(farg(1) == "WA")
+			showevent QTYPE_WARG2,farg(2);
+	}
+	return;
+}
